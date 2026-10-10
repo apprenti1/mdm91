@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+
+<section class="container section admin-shell">
+  <a class="back-link" href="<%= u('/admin') %>">← Retour au tableau de bord</a>
+  <%- include('../partials/admin-nav') %>
+  <h1>Messages (<%= messages.length %>)</h1>
+  <p class="muted">Soumissions des formulaires d'adhésion et de contact du site public.</p>
+
+  <% if (messages.length === 0) { %>
+    <p class="muted">Aucun message reçu pour le moment.</p>
+  <% } %>
+
+  <div class="msg-list">
+    <% messages.forEach(function(m) { %>
+      <div class="msg-card <%= m.is_read ? '' : 'unread' %>">
+        <div class="msg-meta">
+          <span>
+            <span class="badge badge-<%= m.type === 'adhesion' ? 'calendrier' : 'actu' %>"><%= m.type === 'adhesion' ? 'Adhésion' : 'Contact' %></span>
+            <strong><%= m.name %></strong> — <a href="mailto:<%= m.email %>"><%= m.email %></a>
+            <% if (m.phone) { %> — <%= m.phone %><% } %>
+          </span>
+          <span><%= new Date(m.created_at.replace(' ', 'T') + 'Z').toLocaleString('fr-FR') %></span>
+        </div>
+        <% if (m.type === 'adhesion') { %>
+          <p class="muted">Niveau : <strong><%= m.level || '—' %></strong></p>
+        <% } else { %>
+          <p class="muted">Sujet : <strong><%= m.subject %></strong></p>
+        <% } %>
+        <% if (m.message) { %><p class="msg-body"><%= m.message %></p><% } %>
+        <div class="msg-actions">
+          <% if (m.is_read) { %>
+            <form method="POST" action="<%= u('/admin/messages/' + m.id + '/unread') %>"><button class="btn-sm" type="submit">Marquer comme non lu</button></form>
+          <% } else { %>
+            <form method="POST" action="<%= u('/admin/messages/' + m.id + '/read') %>"><button class="btn-sm" type="submit">Marquer comme lu</button></form>
+          <% } %>
+          <form method="POST" action="<%= u('/admin/messages/' + m.id + '/delete') %>" onsubmit="return confirm('Supprimer ce message ?');"><button class="btn-sm btn-danger" type="submit">Supprimer</button></form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

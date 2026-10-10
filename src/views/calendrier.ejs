@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<% var __banner = getBanner('calendrier'); %>
+<section class="page-hero<%= __banner ? ' has-banner' : '' %>">
+  <%- include('partials/hero-banner', { bannerSection: 'calendrier' }) %>
+  <div class="container">
+    <h1><%= page ? page.title : t('calendrier.title') %></h1>
+  </div>
+</section>
+
+<section class="container section prose-section">
+  <% if (page) { %>
+    <div class="prose">
+      <% page.content.split('\n').filter(p => p.trim() !== '').forEach(function(paragraph) { %>
+        <p><%= paragraph %></p>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<section class="container section">
+  <h2><%= t('calendrier.upcoming_title') %></h2>
+  <% if (posts.length === 0) { %>
+    <p class="muted"><%= t('calendrier.empty') %></p>
+  <% } %>
+  <div class="card-grid">
+    <% posts.forEach(function(post) { %>
+      <a class="card post-card" href="<%= u('/actualites/' + post.slug) %>">
+        <span class="badge badge-<%= post.category %>"><%= CATEGORY_LABELS[post.category] || post.category %></span>
+        <h3><%= post.title %></h3>
+        <p><%= post.excerpt || post.content.slice(0, 120) + '…' %></p>
+        <span class="card-date"><%= new Date(post.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

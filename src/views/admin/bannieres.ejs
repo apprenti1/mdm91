@@ -1,0 +1,34 @@
+<%- include('../partials/header') %>
+
+<section class="container section admin-shell">
+  <a class="back-link" href="<%= u('/admin') %>">← Retour au tableau de bord</a>
+  <%- include('../partials/admin-nav') %>
+  <h1>Bannières des sections</h1>
+  <p class="muted">Une image de fond par grande section du site. Trois tailles (480, 960, 1600px) sont générées automatiquement à l'upload et le navigateur choisit la plus adaptée à l'écran du visiteur. Sans bannière, le dégradé de couleur du thème reste affiché.</p>
+
+  <div class="banner-grid">
+    <% sections.forEach(function(s) { %>
+      <% var b = banners[s.key]; %>
+      <div class="banner-card">
+        <div class="banner-preview" style="<%= b ? 'background-image:url(' + u('/uploads/banners/' + b.base_filename + '-960.jpg') + ')' : '' %>"></div>
+        <div class="banner-body">
+          <h3><%= s.label %></h3>
+          <form method="POST" action="<%= u('/admin/bannieres') %>" enctype="multipart/form-data" class="form form-inline">
+            <input type="hidden" name="section" value="<%= s.key %>">
+            <label>Image
+              <input type="file" name="banner" accept="image/*" required>
+            </label>
+            <button class="btn-sm" type="submit"><%= b ? 'Remplacer' : 'Envoyer' %></button>
+          </form>
+          <% if (b) { %>
+            <form method="POST" action="<%= u('/admin/bannieres/' + s.key + '/delete') %>" onsubmit="return confirm('Retirer cette bannière et revenir au dégradé ?');" style="margin-top:.5rem;">
+              <button class="btn-sm btn-danger" type="submit">Retirer la bannière</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

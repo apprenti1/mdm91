@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    container_name: mdm91-site
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-80}:3000"
+    environment:
+      PORT: 3000
+      DATA_DIR: /app/data
+      SESSION_SECRET: ${SESSION_SECRET:-change-me-in-.env}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-plongee91!}
+      BASE_PATH: ${BASE_PATH:-}
+    volumes:
+      - ./data:/app/data
+      - ./src/public/uploads:/app/src/public/uploads

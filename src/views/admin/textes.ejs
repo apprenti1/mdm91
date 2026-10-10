@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+
+<section class="container section admin-shell">
+  <a class="back-link" href="<%= u('/admin') %>">← Retour au tableau de bord</a>
+  <%- include('../partials/admin-nav') %>
+  <h1>Textes du site</h1>
+  <p class="muted">Modifiez ici tous les textes affichés sur le site public. Laissez un champ vide (ou remettez le texte par défaut) pour revenir à la valeur d'origine.</p>
+  <% if (typeof success !== 'undefined' && success) { %><p class="form-success"><%= success %></p><% } %>
+
+  <form method="POST" action="<%= u('/admin/textes') %>" class="form" style="max-width: 860px;">
+    <% groups.forEach(function(group) { %>
+      <h2><%= group %></h2>
+      <% definitions.filter(function(d) { return d.group === group; }).forEach(function(def) { %>
+        <label>
+          <%= def.label %>
+          <% var current = stored[def.key] !== undefined ? stored[def.key] : def.default; %>
+          <% if (def.type === 'textarea') { %>
+            <textarea name="<%= def.key %>" rows="3" placeholder="<%= def.default %>"><%= current %></textarea>
+          <% } else { %>
+            <input type="text" name="<%= def.key %>" value="<%= current %>" placeholder="<%= def.default %>">
+          <% } %>
+        </label>
+      <% }) %>
+    <% }) %>
+    <button class="btn btn-primary" type="submit">Enregistrer tous les textes</button>
+  </form>
+</section>
+
+<%- include('../partials/footer') %>

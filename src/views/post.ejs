@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+
+<article class="container section post-article">
+  <a class="back-link" href="<%= u('/actualites') %>"><%= t('post.back') %></a>
+  <span class="badge badge-<%= post.category %>"><%= CATEGORY_LABELS[post.category] || post.category %></span>
+  <h1><%= post.title %></h1>
+  <p class="card-date"><%= new Date(post.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
+  <div class="prose">
+    <% post.content.split('\n').filter(p => p.trim() !== '').forEach(function(paragraph) { %>
+      <p><%= paragraph %></p>
+    <% }) %>
+  </div>
+</article>
+
+<%- include('partials/footer') %>

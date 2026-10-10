@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script>
+(function () {
+  // Thème clair par défaut, quelles que soient les préférences système :
+  // on ne passe en sombre que si le visiteur l'a explicitement choisi
+  // (bouton de bascule, mémorisé en localStorage).
+  try {
+    if (localStorage.getItem('mdm91-theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch (e) {}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<% var isAdminPage = currentPath.startsWith('/admin'); %>
+<% var metaTitle = typeof pageTitle !== 'undefined' && pageTitle ? pageTitle + ' — ' + siteName : siteName; %>
+<% var metaDesc = typeof metaDescription !== 'undefined' && metaDescription ? metaDescription : "Club de plongée dans l'Essonne — Les Mousquetaires Des Mers : cours piscine, sorties, formations FFESSM, actualités et photos du club."; %>
+<% var ogImageUrl = logo ? (baseUrl + u(logo.url)) : (getBanner('accueil') ? (baseUrl + u(bannerPaths(getBanner('accueil').baseFilename)[1].path)) : null); %>
+<title><%= metaTitle %></title>
+<meta name="description" content="<%= metaDesc %>">
+<% if (isAdminPage) { %>
+<meta name="robots" content="noindex, nofollow">
+<% } else { %>
+<link rel="canonical" href="<%= canonicalUrl %>">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="<%= siteName %>">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="<%= metaTitle %>">
+<meta property="og:description" content="<%= metaDesc %>">
+<meta property="og:url" content="<%= canonicalUrl %>">
+<% if (ogImageUrl) { %><meta property="og:image" content="<%= ogImageUrl %>"><% } %>
+<meta name="twitter:card" content="<%= ogImageUrl ? 'summary_large_image' : 'summary' %>">
+<meta name="twitter:title" content="<%= metaTitle %>">
+<meta name="twitter:description" content="<%= metaDesc %>">
+<% if (ogImageUrl) { %><meta name="twitter:image" content="<%= ogImageUrl %>"><% } %>
+<% } %>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<%= u('/css/style.css') %>">
+<style>
+:root {
+  --deep: <%= colors.color_deep %>;
+  --navy: <%= colors.color_navy %>;
+  --blue: <%= colors.color_blue %>;
+  --teal: <%= colors.color_teal %>;
+  --sand: <%= colors.color_sand %>;
+  --coral: <%= colors.color_coral %>;
+}
+</style>
+<% if (logo) { %>
+<link rel="icon" type="<%= logo.mime %>" href="<%= u(logo.url) %>">
+<% } else { %>
+<link rel="icon" type="image/svg+xml" href="<%= u('/favicon.svg') %>">
+<% } %>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="<%= u('/') %>">
+      <span class="brand-icon"><% if (logo) { %><img src="<%= u(logo.url) %>" alt="" class="brand-logo-img"><% } else { %><%- icon('brand') %><% } %></span>
+      <span class="brand-text">
+        <strong><%= breakBefore(t('header.club_name'), 'Des') %></strong>
+        <small><%= breakBefore(t('header.subtitle'), 'dans') %></small>
+      </span>
+    </a>
+    <div class="header-actions">
+      <% if (currentUser) { %>
+        <a href="<%= u('/admin') %>" class="nav-admin <%= currentPath.startsWith('/admin') ? 'active' : '' %>" aria-label="Espace admin" title="Espace admin"><%- icon('shield') %></a>
+      <% } %>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Changer de thème clair/sombre">
+        <span class="theme-icon theme-icon-sun"><%- icon('sun') %></span>
+        <span class="theme-icon theme-icon-moon"><%- icon('moon') %></span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">☰</button>
+    </div>
+    <nav class="main-nav" id="mainNav">
+      <a href="<%= u('/') %>" class="<%= currentPath === '/' ? 'active' : '' %>">Accueil</a>
+      <a href="<%= u('/presentation') %>" class="<%= currentPath.startsWith('/presentation') ? 'active' : '' %>">Présentation</a>
+      <a href="<%= u('/actualites') %>" class="<%= currentPath.startsWith('/actualites') ? 'active' : '' %>">Bulles d'info</a>
+      <a href="<%= u('/calendrier') %>" class="<%= currentPath.startsWith('/calendrier') ? 'active' : '' %>">Calendrier / Formations</a>
+      <a href="<%= u('/photos') %>" class="<%= currentPath.startsWith('/photos') ? 'active' : '' %>">Photos</a>
+      <a href="<%= u('/adhesion') %>" class="<%= currentPath.startsWith('/adhesion') ? 'active' : '' %>">Adhésion</a>
+      <a href="<%= u('/contacts') %>" class="<%= currentPath.startsWith('/contacts') ? 'active' : '' %>">Contacts</a>
+    </nav>
+  </div>
+</header>
+<main>

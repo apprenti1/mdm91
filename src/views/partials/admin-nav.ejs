@@ -1,0 +1,8 @@
+<nav class="admin-subnav">
+  <a href="<%= u('/admin') %>" class="<%= currentPath === '/admin' ? 'active' : '' %>">Tableau de bord</a>
+  <a href="<%= u('/admin/messages') %>" class="<%= currentPath.startsWith('/admin/messages') ? 'active' : '' %>">Messages<% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %> <span class="pill"><%= unreadCount %></span><% } %></a>
+  <a href="<%= u('/admin/theme') %>" class="<%= currentPath.startsWith('/admin/theme') ? 'active' : '' %>">Thème</a>
+  <a href="<%= u('/admin/bannieres') %>" class="<%= currentPath.startsWith('/admin/bannieres') ? 'active' : '' %>">Bannières</a>
+  <a href="<%= u('/admin/textes') %>" class="<%= currentPath.startsWith('/admin/textes') ? 'active' : '' %>">Textes</a>
+  <a href="<%= u('/admin/password') %>" class="<%= currentPath.startsWith('/admin/password') ? 'active' : '' %>">Mot de passe</a>
+</nav>

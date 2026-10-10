@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+<% var __banner = getBanner('photos'); %>
+<section class="page-hero<%= __banner ? ' has-banner' : '' %>">
+  <%- include('partials/hero-banner', { bannerSection: 'photos' }) %>
+  <div class="container">
+    <h1><%= t('photos.title') %></h1>
+    <p><%= t('photos.subtitle') %></p>
+  </div>
+</section>
+
+<section class="container section">
+  <% const albumNames = Object.keys(albums); %>
+  <% if (albumNames.length === 0) { %>
+    <p class="muted"><%= t('photos.empty') %></p>
+  <% } %>
+  <% albumNames.forEach(function(album) { %>
+    <h2 class="album-title"><%= album %></h2>
+    <div class="photo-grid">
+      <% albums[album].forEach(function(p) { %>
+        <figure class="photo-tile">
+          <a href="<%= u('/uploads/' + p.filename) %>" target="_blank" rel="noopener">
+            <img src="<%= u('/uploads/' + p.filename) %>" alt="<%= p.caption || album %>" loading="lazy">
+          </a>
+          <% if (p.caption) { %><figcaption><%= p.caption %></figcaption><% } %>
+        </figure>
+      <% }) %>
+    </div>
+  <% }) %>
+</section>
+
+<%- include('partials/footer') %>

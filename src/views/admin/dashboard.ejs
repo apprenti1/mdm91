@@ -1,0 +1,80 @@
+<%- include('../partials/header') %>
+
+<section class="container section admin-shell">
+  <div class="admin-head">
+    <div>
+      <h1>Tableau de bord</h1>
+      <p class="muted">Connecté en tant que <strong><%= currentUser.display_name || currentUser.username %></strong></p>
+    </div>
+    <form method="POST" action="<%= u('/admin/logout') %>"><button class="btn btn-ghost" type="submit">Se déconnecter</button></form>
+  </div>
+
+  <%- include('../partials/admin-nav') %>
+
+  <div class="admin-quicklinks">
+    <a class="btn btn-primary" href="<%= u('/admin/posts/new') %>">+ Nouvelle actu / événement</a>
+    <a class="btn btn-secondary" href="#photo-upload">+ Ajouter une photo</a>
+    <a class="btn btn-ghost" href="<%= u('/admin/messages') %>">Messages<% if (unreadCount > 0) { %> <span class="pill"><%= unreadCount %></span><% } %></a>
+  </div>
+
+  <h2>Pages du site</h2>
+  <div class="admin-pages">
+    <a class="chip" href="<%= u('/admin/pages/presentation/edit') %>">Présentation</a>
+    <a class="chip" href="<%= u('/admin/pages/adhesion/edit') %>">Adhésion</a>
+    <a class="chip" href="<%= u('/admin/pages/contacts/edit') %>">Contacts</a>
+    <a class="chip" href="<%= u('/admin/pages/calendrier/edit') %>">Calendrier / Formations (intro)</a>
+  </div>
+
+  <h2>Actualités &amp; événements (<%= posts.length %>)</h2>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>Titre</th><th>Catégorie</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        <% posts.forEach(function(post) { %>
+          <tr>
+            <td><a href="<%= u('/actualites/' + post.slug) %>" target="_blank"><%= post.title %></a></td>
+            <td><span class="badge badge-<%= post.category %>"><%= post.category %></span></td>
+            <td><%= new Date(post.published_at).toLocaleDateString('fr-FR') %></td>
+            <td class="admin-actions">
+              <a class="btn-sm" href="<%= u('/admin/posts/' + post.id + '/edit') %>">Modifier</a>
+              <form method="POST" action="<%= u('/admin/posts/' + post.id + '/delete') %>" onsubmit="return confirm('Supprimer cet article ?');">
+                <button class="btn-sm btn-danger" type="submit">Supprimer</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="photo-upload">Photos (<%= photos.length %>)</h2>
+  <form method="POST" action="<%= u('/admin/photos') %>" enctype="multipart/form-data" class="form form-inline">
+    <label>Album / événement
+      <input type="text" name="album" placeholder="Ex : Sortie carrière Beaumont" required>
+    </label>
+    <label>Légende
+      <input type="text" name="caption" placeholder="Ex : Palanquée du dimanche matin">
+    </label>
+    <label>Crédit photo
+      <input type="text" name="credit" placeholder="Ex : Alain">
+    </label>
+    <label>Fichier image
+      <input type="file" name="photo" accept="image/*" required>
+    </label>
+    <button class="btn btn-primary" type="submit">Ajouter la photo</button>
+  </form>
+
+  <div class="admin-photo-grid">
+    <% photos.forEach(function(p) { %>
+      <figure class="photo-tile">
+        <img src="<%= u('/uploads/' + p.filename) %>" alt="<%= p.caption %>">
+        <figcaption><%= p.album %><% if (p.caption) { %> — <%= p.caption %><% } %></figcaption>
+        <form method="POST" action="<%= u('/admin/photos/' + p.id + '/delete') %>" onsubmit="return confirm('Supprimer cette photo ?');">
+          <button class="btn-sm btn-danger" type="submit">Supprimer</button>
+        </form>
+      </figure>
+    <% }) %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

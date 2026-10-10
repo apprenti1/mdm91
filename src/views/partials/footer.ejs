@@ -1,0 +1,19 @@
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <strong><%= breakBefore(t('header.club_name'), 'Des') %></strong>
+      <p><%= t('footer.tagline') %></p>
+    </div>
+    <div class="footer-links">
+      <a href="<%= u('/presentation') %>">Présentation</a>
+      <a href="<%= u('/adhesion') %>">Adhésion</a>
+      <a href="<%= u('/contacts') %>">Contacts</a>
+      <% if (!currentUser) { %><a href="<%= u('/admin/login') %>">Connexion</a><% } %>
+    </div>
+  </div>
+  <p class="footer-copy">&copy; <%= new Date().getFullYear() %> <%= t('footer.copy') %></p>
+</footer>
+<script src="<%= u('/js/main.js') %>"></script>
+</body>
+</html>

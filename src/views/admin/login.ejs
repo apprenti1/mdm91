@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+
+<section class="container section auth-section">
+  <div class="auth-card">
+    <h1>Espace admin</h1>
+    <p class="muted">Connectez-vous pour publier des actualités et des photos.</p>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <p class="form-error"><%= error %></p>
+    <% } %>
+    <form method="POST" action="<%= u('/admin/login') %>" class="form">
+      <label>Identifiant
+        <input type="text" name="username" autocomplete="username" required>
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <button class="btn btn-primary" type="submit">Se connecter</button>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<% var __banner = getBanner('contacts'); %>
+<section class="page-hero<%= __banner ? ' has-banner' : '' %>">
+  <%- include('partials/hero-banner', { bannerSection: 'contacts' }) %>
+  <div class="container">
+    <h1><%= page ? page.title : 'Contacts' %></h1>
+  </div>
+</section>
+
+<section class="container section prose-section">
+  <% if (page) { %>
+    <div class="prose">
+      <% page.content.split('\n').filter(p => p.trim() !== '').forEach(function(paragraph) { %>
+        <p><%= paragraph %></p>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<section class="container section form-section">
+  <div class="form-card">
+    <% if (typeof submitted !== 'undefined' && submitted) { %>
+      <p class="form-success"><%= t('contacts.form.success') %></p>
+    <% } else { %>
+      <h2><%= t('contacts.form.title') %></h2>
+      <p class="muted"><%= t('contacts.form.intro') %></p>
+      <% if (typeof error !== 'undefined' && error) { %><p class="form-error"><%= error %></p><% } %>
+      <form method="POST" action="<%= u('/contacts') %>" class="form">
+        <div class="hp-field" aria-hidden="true">
+          <label>Laissez ce champ vide<input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <label>Nom complet
+          <input type="text" name="name" value="<%= typeof values !== 'undefined' ? (values.name || '') : '' %>" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" value="<%= typeof values !== 'undefined' ? (values.email || '') : '' %>" required>
+        </label>
+        <label>Sujet
+          <input type="text" name="subject" value="<%= typeof values !== 'undefined' ? (values.subject || '') : '' %>" required>
+        </label>
+        <label>Message
+          <textarea name="message" rows="5" required><%= typeof values !== 'undefined' ? (values.message || '') : '' %></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit"><%= t('contacts.form.submit') %></button>
+      </form>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

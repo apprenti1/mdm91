@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+
+<section class="container section admin-shell">
+  <a class="back-link" href="<%= u('/admin') %>">← Retour au tableau de bord</a>
+  <%- include('../partials/admin-nav') %>
+  <h1>Personnalisation du thème</h1>
+  <p class="muted">Ces couleurs pilotent l'ensemble du site (en-tête, boutons, dégradés, filtres…).</p>
+  <% if (typeof success !== 'undefined' && success) { %><p class="form-success"><%= success %></p><% } %>
+
+  <form method="POST" action="<%= u('/admin/theme') %>">
+    <div class="color-field-grid">
+      <% colorFields.forEach(function(f) { %>
+        <div class="color-field">
+          <label for="<%= f.key %>"><%= f.label %></label>
+          <input type="color" id="<%= f.key %>" name="<%= f.key %>" value="<%= values[f.key] %>">
+          <code><%= values[f.key] %></code>
+        </div>
+      <% }) %>
+    </div>
+    <div class="theme-actions">
+      <button class="btn btn-primary" type="submit">Enregistrer</button>
+    </div>
+  </form>
+  <form method="POST" action="<%= u('/admin/theme/reset') %>" class="theme-actions" onsubmit="return confirm('Réinitialiser les 6 couleurs aux valeurs par défaut du club ?');">
+    <button class="btn btn-ghost" type="submit">Réinitialiser aux couleurs par défaut</button>
+  </form>
+
+  <h2>Logo du club</h2>
+  <p class="muted">Ce logo remplace l'icône affichée dans l'en-tête à côté du nom du club, ainsi que le favicon de l'onglet du navigateur. Sans logo personnalisé, une icône par défaut est utilisée.</p>
+  <div class="logo-current">
+    <% if (logo) { %>
+      <img src="<%= u(logo.url) %>" alt="Logo actuel" class="logo-preview">
+    <% } else { %>
+      <span class="logo-preview logo-preview-default"><%- icon('brand') %></span>
+    <% } %>
+    <span class="muted"><%= logo ? 'Logo personnalisé actif.' : "Icône par défaut (aucun logo personnalisé)." %></span>
+  </div>
+  <form method="POST" action="<%= u('/admin/theme/logo') %>" enctype="multipart/form-data" class="form form-inline">
+    <label>Nouveau logo (SVG, PNG, JPG ou WebP, 2 Mo max)
+      <input type="file" name="logo" accept="image/*" required>
+    </label>
+    <button class="btn btn-primary" type="submit">Envoyer le logo</button>
+  </form>
+  <% if (logo) { %>
+    <form method="POST" action="<%= u('/admin/theme/logo/delete') %>" class="theme-actions" onsubmit="return confirm('Revenir à l\'icône par défaut ?');">
+      <button class="btn btn-ghost" type="submit">Revenir au logo par défaut</button>
+    </form>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

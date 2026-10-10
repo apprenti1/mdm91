@@ -1,0 +1,12 @@
+<% var banner = typeof bannerSection !== 'undefined' ? getBanner(bannerSection) : null; %>
+<% if (banner) { %>
+  <% var __paths = bannerPaths(banner.baseFilename); %>
+  <% var __srcset = __paths.map(function(p) { return u(p.path) + ' ' + p.width + 'w'; }).join(', '); %>
+  <img
+    class="hero-banner-img"
+    src="<%= u(__paths[1].path) %>"
+    srcset="<%= __srcset %>"
+    sizes="100vw"
+    alt=""
+    aria-hidden="true">
+<% } %>
