@@ -14,6 +14,7 @@ const { breakBefore } = require('./src/utils/format');
 const { icon } = require('./src/utils/icons');
 const { getBanner, bannerPaths } = require('./src/banners');
 const { getCustomLogo } = require('./src/logo');
+const { ogImagePathFor, W: OG_W, H: OG_H } = require('./src/og');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -77,6 +78,11 @@ app.use((req, res, next) => {
   res.locals.u = (p) => BASE_PATH + p;
   res.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
   res.locals.canonicalUrl = `${res.locals.baseUrl}${req.originalUrl}`;
+  res.locals.ogImage = {
+    url: `${res.locals.baseUrl}${BASE_PATH}${ogImagePathFor(res.locals.currentPath)}`,
+    width: OG_W,
+    height: OG_H,
+  };
   next();
 });
 

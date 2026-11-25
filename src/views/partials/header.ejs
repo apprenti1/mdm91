@@ -18,24 +18,37 @@
 <% var isAdminPage = currentPath.startsWith('/admin'); %>
 <% var metaTitle = typeof pageTitle !== 'undefined' && pageTitle ? pageTitle + ' — ' + siteName : siteName; %>
 <% var metaDesc = typeof metaDescription !== 'undefined' && metaDescription ? metaDescription : "Club de plongée dans l'Essonne — Les Mousquetaires Des Mers : cours piscine, sorties, formations FFESSM, actualités et photos du club."; %>
-<% var ogImageUrl = logo ? (baseUrl + u(logo.url)) : (getBanner('accueil') ? (baseUrl + u(bannerPaths(getBanner('accueil').baseFilename)[1].path)) : null); %>
+<% var isArticle = /^\/actualites\/[^/]+$/.test(currentPath); %>
+<% var ogAlt = (typeof pageTitle !== 'undefined' && pageTitle ? pageTitle : t('home.hero.title')) + ' — ' + siteName; %>
 <title><%= metaTitle %></title>
 <meta name="description" content="<%= metaDesc %>">
+<meta name="theme-color" content="<%= colors.color_navy %>">
 <% if (isAdminPage) { %>
 <meta name="robots" content="noindex, nofollow">
 <% } else { %>
 <link rel="canonical" href="<%= canonicalUrl %>">
-<meta property="og:type" content="website">
+<!-- Aperçus de partage (Facebook, WhatsApp, LinkedIn, Discord, Slack, iMessage...) -->
+<meta property="og:type" content="<%= isArticle ? 'article' : 'website' %>">
 <meta property="og:site_name" content="<%= siteName %>">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="<%= metaTitle %>">
 <meta property="og:description" content="<%= metaDesc %>">
 <meta property="og:url" content="<%= canonicalUrl %>">
-<% if (ogImageUrl) { %><meta property="og:image" content="<%= ogImageUrl %>"><% } %>
-<meta name="twitter:card" content="<%= ogImageUrl ? 'summary_large_image' : 'summary' %>">
+<meta property="og:image" content="<%= ogImage.url %>">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="<%= ogImage.width %>">
+<meta property="og:image:height" content="<%= ogImage.height %>">
+<meta property="og:image:alt" content="<%= ogAlt %>">
+<% if (isArticle && typeof post !== 'undefined' && post) { %>
+<meta property="article:published_time" content="<%= new Date(post.published_at.replace(' ', 'T') + 'Z').toISOString() %>">
+<meta property="article:section" content="<%= (typeof CATEGORY_LABELS !== 'undefined' && CATEGORY_LABELS[post.category]) || 'Actualité' %>">
+<% } %>
+<!-- X / Twitter -->
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<%= metaTitle %>">
 <meta name="twitter:description" content="<%= metaDesc %>">
-<% if (ogImageUrl) { %><meta name="twitter:image" content="<%= ogImageUrl %>"><% } %>
+<meta name="twitter:image" content="<%= ogImage.url %>">
+<meta name="twitter:image:alt" content="<%= ogAlt %>">
 <% } %>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">

@@ -153,7 +153,7 @@ Le site étant entièrement rendu côté serveur, chaque page envoyée à un rob
 
 - `/robots.txt` et `/sitemap.xml` sont générés dynamiquement à partir du contenu réel de la base (toujours à jour, s'adaptent automatiquement au nom de domaine)
 - Titre et description uniques par page (articles, pages, catégories)
-- Balises Open Graph / Twitter Card (aperçus de partage), avec image automatique si un logo ou une bannière d'accueil est défini
+- Balises Open Graph / Twitter Card (aperçus de partage sur Facebook, WhatsApp, LinkedIn, Discord, X...) avec une **vignette 1200×630 générée automatiquement pour chaque page** (`/og/<page>.png`, ex. `/og/accueil.png`, `/og/actualites/<slug>.png`) : couleurs du thème, titre et catégorie de la page, logo personnalisé et bannière de la section en fond si définis. Les vignettes sont mises en cache en mémoire et se régénèrent dès que le contenu, le thème, le logo ou la bannière change (code : `src/og.js`)
 - URL canonique sur chaque page publique
 - `noindex, nofollow` automatique sur tout l'espace `/admin`
 - Données structurées JSON-LD (`SportsOrganization`) sur la page d'accueil

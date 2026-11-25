@@ -1,5 +1,6 @@
 const express = require('express');
 const { db } = require('../db');
+const { resolveOgContent, renderOgImage } = require('../og');
 
 const router = express.Router();
 
@@ -50,6 +51,25 @@ router.get('/sitemap.xml', (req, res) => {
     .map((e) => `  <url>\n    <loc>${baseUrl}${u(e.loc)}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}\n  </url>`)
     .join('\n')}\n</urlset>\n`;
   res.type('application/xml').send(xml);
+});
+
+// Vignettes d'aperçu pour les réseaux sociaux (Open Graph / Twitter Card).
+// "/og/accueil.png" -> page d'accueil, "/og/<chemin>.png" -> page <chemin>.
+// Un chemin inconnu retombe sur la vignette d'accueil.
+router.get(/^\/og\/(.+)\.png$/, async (req, res, next) => {
+  try {
+    const { t, colors } = res.locals;
+    const name = req.params[0];
+    const logical = name === 'accueil' ? '/' : '/' + name;
+    const content = resolveOgContent(logical, t) || resolveOgContent('/', t);
+    const { buffer, etag } = await renderOgImage({ content, colors, t, host: req.get('host') });
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.set('ETag', `"${etag}"`);
+    if (req.fresh) return res.status(304).end();
+    res.type('png').send(buffer);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/', (req, res) => {
